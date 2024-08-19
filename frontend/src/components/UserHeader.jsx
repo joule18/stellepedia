@@ -9,10 +9,21 @@ import {
   MenuButton,
   Portal,
   useToast,
+  Button,
 } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
+import userAtom from "../atoms/userAtom";
+import { Link as RouterLink } from "react-router-dom";
+import { useState } from "react";
 
 const UserHeader = ({ user }) => {
   const toast = useToast();
+
+  const currentUser = useRecoilValue(userAtom); //logged in user
+  const [following, setFollowing] = useState(
+    user.followers.includes(currentUser._id)
+  );
+
   const copyUrl = () => {
     const currentUrl = window.location.href;
     navigator.clipboard.writeText(currentUrl).then(() => {
@@ -68,6 +79,13 @@ const UserHeader = ({ user }) => {
         </Box>
       </Flex>
       <Text>{user.bio}</Text>
+      {currentUser._id === user._id ? (
+        <RouterLink to="/update">
+          <Button size={"sm"}>Update Profile</Button>
+        </RouterLink>
+      ) : (
+        <Button size={"sm"}>{following ? "Unfollow" : "Follow"}</Button>
+      )}
       <Flex w={"full"} justifyContent={"space-between"}>
         <Flex gap={2} alignItems={"center"}>
           <Text color={"gray.light"}>{user.followers.length}</Text>
