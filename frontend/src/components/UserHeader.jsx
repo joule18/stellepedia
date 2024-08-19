@@ -16,7 +16,7 @@ import userAtom from "../atoms/userAtom";
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import useShowToast from "../hooks/useShowToast";
-
+//TODO, try logging auth from UserHeader.jsx (caused error in earlier versions)
 const UserHeader = ({ user }) => {
   const toast = useToast();
 
