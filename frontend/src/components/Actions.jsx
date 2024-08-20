@@ -95,6 +95,7 @@ const Actions = ({ post: post_ }) => {
     <Flex flexDirection={"column"}>
       <Flex gap={3} my={2} onClick={(e) => e.preventDefault()}>
         <svg
+          cursor={"pointer"}
           aria-label="Like"
           color={liked ? "rgb(237, 73, 86)" : ""}
           fill={liked ? "rgb(237, 73, 86)" : "transparent"}
@@ -112,6 +113,7 @@ const Actions = ({ post: post_ }) => {
         </svg>
 
         <svg
+          cursor={"pointer"}
           aria-label="Comment"
           color=""
           fill=""

@@ -13,7 +13,7 @@ import protectRoute from "../middleware/protectRoute.js";
 const router = express.Router();
 
 router.get("/feed", protectRoute, getFeedPosts);
-router.get("/:postId", getPost);
+router.get("/:id", getPost);
 router.get("/user/:username", getUserPosts);
 router.post("/create", protectRoute, createPost);
 router.delete("/:id", protectRoute, deletePost);
