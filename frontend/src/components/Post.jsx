@@ -98,7 +98,7 @@ const Post = ({ post, postedBy }) => {
               <Text
                 fontSize={"xs"}
                 width={36}
-                textAlign={"righ"}
+                textAlign={"right"}
                 color={"gray.light"}
               >
                 {formatDistanceToNow(new Date(post.createdAt)).replace(
