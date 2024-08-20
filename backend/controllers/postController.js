@@ -1,10 +1,16 @@
 import Post from "../models/postModel.js";
 import User from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
+import emptyInputChecker from "../utils/helpers/emptyInputChecker.js";
 
 const createPost = async (req, res) => {
   try {
     const { postedBy, text } = req.body;
+
+    if (emptyInputChecker([text])) {
+      return res.status(400).json({ error: "Please fill in the text field." });
+    }
+
     let { img } = req.body;
 
     if (!postedBy || !text) {
@@ -117,8 +123,12 @@ const replyToPost = async (req, res) => {
     const userProfilePic = req.user.profilePic;
     const { username } = req.user;
 
-    if (!text) {
-      return res.status(400).json({ error: "Text is required for replies" });
+    if (!text || emptyInputChecker([text])) {
+      return res
+        .status(400)
+        .json({
+          error: "Reply cannot be empty or filled with only white spaces.",
+        });
     }
 
     const post = await Post.findById(postId);

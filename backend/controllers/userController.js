@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
+import emptyInputChecker from "../utils/helpers/emptyInputChecker.js";
 
 const getUserProfile = async (req, res) => {
   const { query } = req.params;
@@ -32,6 +33,11 @@ const getUserProfile = async (req, res) => {
 const signupUser = async (req, res) => {
   try {
     const { name, email, username, password } = req.body;
+
+    if (emptyInputChecker([name, email, username, password])) {
+      return res.status(400).json({ error: "Please fill in all fields." });
+    }
+
     const user = await User.findOne({ $or: [{ username }, { email }] });
 
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -45,7 +51,7 @@ const signupUser = async (req, res) => {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    if (password.length < 6) {
+    if (password.trim().length < 6) {
       return res
         .status(400)
         .json({ error: "Password must have at least 6 characters" });
@@ -84,6 +90,11 @@ const signupUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
+
+    if (emptyInputChecker([username, password])) {
+      return res.status(400).json({ error: "Please fill in all fields." });
+    }
+
     const user = await User.findOne({ username });
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -158,6 +169,11 @@ const followUnfollowUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { name, email, username, password, bio } = req.body;
+
+  if (emptyInputChecker([name, email, username])) {
+    return res.status(400).json({ error: "Please fill in required fields." });
+  }
+
   let { profilePic } = req.body;
   const userId = req.params.id;
   try {
@@ -190,7 +206,7 @@ const updateUser = async (req, res) => {
     user.email = email || user.email;
     user.username = username || user.username;
     user.profilePic = profilePic || user.profilePic;
-    user.bio = bio || user.bio;
+    user.bio = bio; //bio can be empty
 
     user = await user.save();
 

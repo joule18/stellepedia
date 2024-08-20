@@ -97,7 +97,7 @@ export default function UpdateProfilePage() {
               </Center>
             </Stack>
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Full name</FormLabel>
             <Input
               placeholder="Full name"
@@ -107,7 +107,7 @@ export default function UpdateProfilePage() {
               onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Username</FormLabel>
             <Input
               placeholder="username"
@@ -119,7 +119,7 @@ export default function UpdateProfilePage() {
               }
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Email address</FormLabel>
             <Input
               placeholder="your-email@example.com"
