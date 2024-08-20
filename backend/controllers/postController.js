@@ -44,7 +44,7 @@ const createPost = async (req, res) => {
 
     const newPost = new Post({ postedBy, text, img });
     await newPost.save();
-    res.status(201).json({ message: "Post created successfully", newPost });
+    res.status(201).json(newPost);
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.log("Error in createPost ", error.message);
@@ -124,11 +124,9 @@ const replyToPost = async (req, res) => {
     const { username } = req.user;
 
     if (!text || emptyInputChecker([text])) {
-      return res
-        .status(400)
-        .json({
-          error: "Reply cannot be empty or filled with only white spaces.",
-        });
+      return res.status(400).json({
+        error: "Reply cannot be empty or filled with only white spaces.",
+      });
     }
 
     const post = await Post.findById(postId);
@@ -140,7 +138,7 @@ const replyToPost = async (req, res) => {
     post.replies.push(reply);
     await post.save();
 
-    res.status(200).json({ message: "Reply added successfully", post });
+    res.status(200).json(reply);
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.log("Error in replyToPost ", error.message);

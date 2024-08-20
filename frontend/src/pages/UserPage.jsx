@@ -4,11 +4,13 @@ import { useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
 import { Flex, Spinner } from "@chakra-ui/react";
 import Post from "../components/Post";
-import useGetUserProfile from "../hooks/useGetUserProfile";
+import useGetUserProfile from "../hooks/useGetUserProfile.js";
+import postsAtom from "../atoms/postsAtom";
+import { useRecoilState } from "recoil";
 
 const UserPage = () => {
   const { user, loading } = useGetUserProfile();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useRecoilState(postsAtom);
   const [fetchingPosts, setFetchingPosts] = useState(true);
 
   const { username } = useParams();
@@ -24,7 +26,6 @@ const UserPage = () => {
           showToast("Error", data.error, "error");
         }
         setPosts(data);
-        console.log(data);
       } catch (error) {
         showToast("Error", error, "error");
         setPosts([]);
@@ -34,7 +35,7 @@ const UserPage = () => {
     };
 
     getPosts();
-  }, [username, showToast]);
+  }, [username, showToast, setPosts]);
 
   if (!user && loading) {
     return (
