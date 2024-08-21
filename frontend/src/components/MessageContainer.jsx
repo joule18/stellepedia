@@ -35,6 +35,7 @@ const MessageContainer = () => {
         const data = await res.json();
         if (data.error) {
           showToast("Error", data.error, "error");
+          return;
         }
         setMessages(data);
       } catch (error) {
@@ -100,7 +101,7 @@ const MessageContainer = () => {
             ))}
       </Flex>
 
-      <MessageInput />
+      <MessageInput setMessages={setMessages} />
     </Flex>
   );
 };
