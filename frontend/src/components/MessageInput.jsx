@@ -102,7 +102,13 @@ const MessageInput = ({ setMessages }) => {
       </form>
       <Flex flex={5} cursor={"pointer"}>
         <BsFillImageFill size={20} onClick={() => imageRef.current.click()} />
-        <Input type="file" hidden ref={imageRef} onChange={handleImageChange} />
+        <Input
+          type="file"
+          hidden
+          ref={imageRef}
+          accept="image/*"
+          onChange={handleImageChange}
+        />
       </Flex>
       <Modal
         isOpen={imgUrl}
