@@ -8,9 +8,11 @@ import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 
+import { app, server } from "./socket/socket.js";
+
 dotenv.config();
 connectDB();
-const app = express();
+// const app = express(); // dont need this instance anymore since we have one from the socket server
 
 const PORT = process.env.PORT || 5000;
 
@@ -29,6 +31,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/messages", messageRoutes);
 
-app.listen(PORT, () => {
+//changed from app to server to handle http requests and socket server processes
+server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
