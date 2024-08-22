@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -31,6 +31,9 @@ const MessageContainer = () => {
   const currentUser = useRecoilValue(userAtom);
   const { socket } = useSocket();
   const setConversations = useSetRecoilState(conversationsAtom);
+
+  //ref variable to reference last message upon chatting (see 2nd useeffect)
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     socket.on("newMessage", (message) => {
@@ -54,6 +57,11 @@ const MessageContainer = () => {
 
     return () => socket.off("newMessage");
   }, [socket]);
+
+  //scroll to last message upon chat
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -123,11 +131,20 @@ const MessageContainer = () => {
               </Flex>
             ))
           : messages.map((message) => (
-              <Message
+              <Flex
                 key={message._id}
-                message={message}
-                ownMessage={currentUser._id === message.sender}
-              />
+                direction={"column"}
+                ref={
+                  messages.length - 1 === messages.indexOf(message)
+                    ? messageEndRef
+                    : null
+                }
+              >
+                <Message
+                  message={message}
+                  ownMessage={currentUser._id === message.sender}
+                />
+              </Flex>
             ))}
       </Flex>
 
