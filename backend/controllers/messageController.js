@@ -2,12 +2,13 @@ import Conversation from "../models/conversationModel.js";
 import Message from "../models/messageModel.js";
 import { getRecipientSocketId, io } from "../socket/socket.js";
 import emptyInputChecker from "../utils/helpers/emptyInputChecker.js";
+import { v2 as cloudinary } from "cloudinary";
 
 const sendMessage = async (req, res) => {
   try {
     const { recipientId, message } = req.body;
-
-    if (emptyInputChecker([message])) {
+    let { img } = req.body;
+    if (emptyInputChecker([message]) && !img) {
       return res.status(400).json({ error: "Message field cannot be empty." });
     }
 
@@ -28,10 +29,16 @@ const sendMessage = async (req, res) => {
       await conversation.save();
     }
 
+    if (img) {
+      const uploadedResponse = await cloudinary.uploader.upload(img);
+      img = uploadedResponse.secure_url;
+    }
+
     const newMessage = new Message({
       conversationId: conversation._id,
       sender: senderId,
       text: message,
+      img: img || "",
     });
 
     await Promise.all([
