@@ -37,10 +37,12 @@ const MessageContainer = () => {
 
   useEffect(() => {
     socket.on("newMessage", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+      if (selectedConversation._id === message.conversationId) {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      }
       setConversations((prev) => {
         const updatedConversations = prev.map((conversation) => {
-          if (conversation._id === selectedConversation._id) {
+          if (conversation._id === message.conversationId) {
             return {
               ...conversation,
               lastMessage: {
@@ -56,7 +58,7 @@ const MessageContainer = () => {
     });
 
     return () => socket.off("newMessage");
-  }, [socket]);
+  }, [socket, selectedConversation]);
 
   //scroll to last message upon chat
   useEffect(() => {
